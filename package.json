@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel -d lib/ src",
-    "start": "npm run build && node lib/index.js"
+    "build": "babel -d build/ src",
+    "start": "npm run build && node build/app.js"
   },
   "babel": {
     "presets": [
@@ -18,16 +18,23 @@
         {
           "legacy": true
         }
-       
       ],
-      ["@babel/plugin-proposal-class-properties", { "loose": true }]
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
     ]
   },
   "author": "Wendy Chen",
   "license": "ISC",
   "dependencies": {
+    "common-tags": "^1.8.0",
+    "fs": "0.0.1-security",
     "inquirer": "^7.0.0",
-    "mobx": "^5.13.0"
+    "mobx": "^5.13.0",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
