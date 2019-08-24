@@ -1,0 +1,39 @@
+{
+  "name": "area-wizard",
+  "version": "1.0.0",
+  "description": "Helps create an area",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel -d lib/ src",
+    "start": "npm run build && node lib/index.js"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+       
+      ],
+      ["@babel/plugin-proposal-class-properties", { "loose": true }]
+    ]
+  },
+  "author": "Wendy Chen",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^7.0.0",
+    "mobx": "^5.13.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "latest",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/preset-env": "^7.5.5"
+  }
+}
