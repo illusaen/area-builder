@@ -4,7 +4,7 @@ import { stripIndent } from 'common-tags';
 import fs from 'fs';
 import moment from 'moment';
 import AreaManager from './area';
-import store from '../models/store';
+import store from '../store/app';
 
 class AppManager {
   static async save_area() {

@@ -5,7 +5,7 @@ import { create_area, delete_area, edit_area, menu_area, select_area } from '../
 import { contains } from '../utils';
 import AppManager from './app';
 import RoomManager from './room';
-import store from '../models/store';
+import store from '../store/app';
 
 class AreaManager {
   static appManagerFunctions = ['save_area', 'save_all', 'quit'];
@@ -28,7 +28,7 @@ class AreaManager {
   static async delete_area() {
     const delete_area_answers = await prompt(delete_area());
     if (delete_area_answers.delete_area) {
-      store.deleteArea();
+      store.delete();
     }
     await this.menu_area();
   }
@@ -43,8 +43,7 @@ class AreaManager {
     const questions = select_area();
     const select_area_answers = await prompt(questions);
     if (select_area_answers.select_area !== 'back') {
-      const index = store.areas.findIndex(area => area.name === select_area_answers.select_area);
-      store.setSelectedArea(index);
+      store.select(select_area_answers.select_area);
     }
     await this.menu_area();
   }

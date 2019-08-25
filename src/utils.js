@@ -1,6 +1,6 @@
 'use strict';
 
-import store from './models/store';
+import store from './store/app';
 
 const filterChoices = (choices) => {
   return choices

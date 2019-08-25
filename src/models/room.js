@@ -1,7 +1,7 @@
 'use strict';
 
 import { computed, observable } from 'mobx';
-import store from './store';
+import store from '../store/app';
 import { createId, calculateCoordinates, equalCoordinates } from '../utils';
 
 class Room {

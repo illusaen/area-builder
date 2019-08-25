@@ -1,6 +1,6 @@
 'use strict';
 
-import store from '../models/store';
+import store from '../store/app';
 import { filterChoices } from '../utils';
 
 const _menu_prompt_choice_template = [

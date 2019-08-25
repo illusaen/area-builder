@@ -1,6 +1,6 @@
 'use strict';
 
-import store from '../models/store';
+import store from '../store/app';
 import { filterChoices, normalizeDirection } from '../utils';
 
 const _menu_room_prompt_choice_template = [

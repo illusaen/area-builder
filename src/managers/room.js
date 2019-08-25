@@ -3,7 +3,7 @@
 import { prompt } from 'inquirer';
 import { menu_room, create_room, edit_room, select_room, delete_room } from '../prompts/room';
 import AreaManager from './area';
-import store from '../models/store';
+import store from '../store/app';
 import { normalizeDirection } from '../utils';
 
 class RoomManager {
@@ -36,8 +36,7 @@ class RoomManager {
   static async select_room() {
     const select_room_answers = await prompt(select_room());
     if (select_room_answers.select_room !== 'back') {
-      const index = store.rooms.findIndex(room => room.id === select_room_answers.select_room);
-      store.setSelectedRoom(index);
+      store.select(select_room_answers.select_room);
     }
     await this.menu_room();
   }
