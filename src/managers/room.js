@@ -22,7 +22,7 @@ class RoomManager {
   static async delete_room() {
     const delete_room_answers = await prompt(delete_room());
     if (delete_room_answers.delete_room) {
-      await store.deleteRoom();
+      store.deleteRoom();
     }
     await this.menu_room();
   }
