@@ -55,9 +55,8 @@ class Store {
   }
 
   doesRoomExist = (room, direction) => {
-    const coordinates = calculateCoordinates(room, direction);
+    const coordinates = calculateCoordinates(room.coordinates, direction);
     if (!coordinates || !direction) { return false; }
-
     return this.roomsInArea.filter(rm => equalCoordinates(rm.coordinates, coordinates)).length > 0;
   }
 
