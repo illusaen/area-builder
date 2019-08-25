@@ -1,6 +1,5 @@
 'use strict';
 
-import { stripIndent } from 'common-tags';
 import fs from 'fs';
 import moment from 'moment';
 import AreaManager from './area';
@@ -22,34 +21,11 @@ class AppManager {
     return console.log('Goodbye!');
   }
 
-  static _formatArea(areaIndex) {
-    const area = store.areaStore.area(areaIndex);
-    let data = stripIndent`
-      title: "${area.name}"
-      behaviors:
-        progressive-respawn:
-          interval: ${area.respawn}
-    `;
-    return data += (area.instanced ? '\ninstanced: player' : '') + '\n';
-  }
-
-  static _formatRoom(areaIndex) {
-    const data = store.roomStore.inArea(areaIndex).map(room => stripIndent`
-      - id: ${room.id}
-        title: "${room.name}"
-        coordinates: [${room.coordinateString}]
-        description: "${room.description}"
-        metadata:
-          terrain: "${room.terrain}"
-    `).join('\n\n') + '\n';
-    return data;
-  }
-
   static _writeFile(path, areaIndex, isArea, shouldLog) {
-    const data = isArea ? this._formatArea(areaIndex) : this._formatRoom(areaIndex);
+    const data = isArea ? store.areaStore.stringValue(areaIndex).get() : store.roomStore.stringValue(areaIndex).get();
     const filePath = path + (isArea ? '/manifest.yml' : '/rooms.yml');
-    fs.writeFile(filePath, data, { flag: 'w' }, err => {
-      if (err) { throw err; }
+    fs.writeFile(filePath, data, { flag: 'w' }, error => {
+      if (error) { throw error; }
       if (shouldLog) {
         console.log(`${filePath} written.`);
       }

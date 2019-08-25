@@ -1,6 +1,7 @@
 'use strict';
 
 import { action, computed, observable } from 'mobx';
+import { stripIndent } from 'common-tags';
 import Area from '../models/area';
 import { equalNames } from '../utils';
 
@@ -54,13 +55,31 @@ class AreaStore {
   @computed get area(index) {
     return this._areas[index];
   }
-  
+
   /**
    * Gets area names. Computed using mobx array of areas..
    * @return {array<String>} Array of IDs.
    */
   @computed get names() {
     return this._areas.map(area => area.name);
+  }
+
+  /**
+   * Returns representation of area to string. String is formatted for RanvierMUD.
+   * @param {number} index Index of area to format.
+   * @return {string} String of area at given index.
+   */
+  stringValue(index) {
+    return computed(() => {
+      const area = this._areas[index];
+      let data = stripIndent`
+        title: "${area.name}"
+        behaviors:
+          progressive-respawn:
+            interval: ${area.respawn}
+      `;
+      return data += (area.instanced ? '\ninstanced: player' : '') + '\n';
+    });
   }
 
   /**

@@ -1,6 +1,7 @@
 'use strict';
 
 import { action, computed, observable } from 'mobx';
+import { stripIndent } from 'common-tags';
 import { calculateCoordinates, equalCoordinates, normalizeDirection, createId } from '../utils';
 import Room from '../models/room';
 
@@ -61,6 +62,25 @@ class RoomStore {
    */
   @computed get ids() {
     return this._rooms.map(room => room.id);
+  }
+
+  /**
+   * Returns representation of all rooms in a given area to string. String is formatted for RanvierMUD.
+   * @param {number} index Index of rooms belonging to area to format.
+   * @return {string} String of all rooms belonging to area at given index.
+   */
+  stringValue(index) {
+    return computed(() => {
+      const data = this.inArea(index).get().map(room => stripIndent`
+        - id: ${room.id}
+          title: "${room.name}"
+          coordinates: [${room.coordinateString}]
+          description: "${room.description}"
+          metadata:
+            terrain: "${room.terrain}"
+      `).join('\n\n') + '\n';
+      return data;
+    });
   }
 
   /**
