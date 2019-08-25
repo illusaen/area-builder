@@ -76,8 +76,18 @@ class Store {
   }
 
   @action deleteArea() {
+    const rooms = this.rooms.filter(room => room.areaIndex !== this.selectedAreaIndex)
+      .map(room => {
+        if (room.areaIndex > this.selectedAreaIndex) {
+          const coords = { x: room.coordinates.x, y: room.coordinates.y, z: room.coordinates.z };
+          return Room.from(room, room.areaIndex - 1, coords);
+        }
+        return room;
+      }); 
+    this.rooms = rooms;
     this.areas.splice(this.selectedAreaIndex, 1);
-    this.selectedAreaIndex = 0;
+    this.setSelectedArea(store.areas.length - 1);
+    this.setSelectedRoom(store.roomsInArea.length - 1);
   }
 
   @action addRoom(name, description, terrain, direction) {

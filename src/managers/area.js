@@ -28,7 +28,7 @@ class AreaManager {
   static async delete_area() {
     const delete_area_answers = await prompt(delete_area());
     if (delete_area_answers.delete_area) {
-      store.deleteArea();
+      await store.deleteArea();
     }
     await this.menu_area();
   }

@@ -3,18 +3,19 @@
 import { stripIndent } from 'common-tags';
 import fs from 'fs';
 import moment from 'moment';
+import AreaManager from './area';
 import store from '../models/store';
 
 class AppManager {
   static async save_area() {
-    this._saveArea(store.selectedAreaIndex, false);
-    await this.menu_area();
+    await this._saveArea(store.selectedAreaIndex, false);
+    await AreaManager.menu_area();
   }
 
   static async save_all() {
-    store.areas.forEach((_, index) => {
-      this._saveArea(index);
-    });
+    for (let index = 0; index < store.areas.length; index++) {
+      await this._saveArea(index);
+    }
   }
 
   static async quit() {

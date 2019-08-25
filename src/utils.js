@@ -30,7 +30,7 @@ const calculateCoordinates = (previous_coordinates, direction) => {
     console.error('ERROR: Could not find coordinates of selected room.');
     process.exit(1);
   }
-
+  
   const delta = deltas[direction];
   if (!delta) {
     console.error('ERROR: Could not find delta for direction.');

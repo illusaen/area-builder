@@ -68,7 +68,6 @@ const _create_room_prompt_choice_template = isCreating => {
       name: 'direction',
       message: 'Direction from selected room (n, s, e, w, u, d)',
       when: _ => store.hasSelectedRoom && isCreating,
-      filter: value => normalizeDirection(value),
       validate: value => _validateRoomDirection(value)
     }, {
       type: 'input',

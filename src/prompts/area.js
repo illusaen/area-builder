@@ -60,10 +60,15 @@ const _create_area_prompt_choice_template = isCreating => [
       return true;
     }
   }, {
-    type: 'number',
+    type: 'input',
     name: 'respawn',
     message: 'Number of minutes to respawn:',
-    default: 20
+    default: 20,
+    validate: value => {
+      const val = parseInt(value, 10);
+      if (!val) { return 'Please enter an integer.'; }
+      return true;
+    }
   }, {
     type: 'confirm',
     name: 'instanced',

@@ -16,6 +16,13 @@ class Room {
     }
   }
 
+  static from(room, areaIndex, coordinates) {
+    const newRoom = new Room(room.name, room.description, room.terrain);
+    newRoom.coordinates = { x: coordinates.x, y: coordinates.y, z: coordinates.z };
+    newRoom.areaIndex = areaIndex;
+    return newRoom;
+  }
+
   @observable name = '';
   @observable areaIndex = -1;
   @observable description = '';
