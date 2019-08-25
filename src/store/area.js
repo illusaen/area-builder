@@ -1,14 +1,22 @@
 'use strict';
 
-import { observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import Area from '../models/area';
-import roomStore from './room';
+import { equalNames } from '../utils';
 
 /**
  * Area store module used to store list of all areas created as well as the currently selected area.
  * @module AreaStore
  */
 class AreaStore {
+  /**
+   * Constructs a new AreaStore with a reference to its parent {@link RootStore}.
+   * @param {RootStore} rootStore Reference to rootStore. Only used to access sibling store {@link RoomStore} when deleting an area so that the deleted area's rooms can also be deleted.
+   */
+  constructor(rootStore) {
+    this._rootStore = rootStore;
+  }
+
   @observable selectedIndex = -1;
   @observable _areas = [];
 
@@ -36,6 +44,15 @@ class AreaStore {
    */
   @computed get selected() {
     return this.hasSelectedArea && this._areas[this.selectedIndex];
+  }
+
+  /**
+   * Gets area by given index.
+   * @param {number} index Index of area to get.
+   * @return {Area} Area at given index.
+   */
+  @computed get area(index) {
+    return this._areas[index];
   }
   
   /**
@@ -111,7 +128,7 @@ class AreaStore {
     }
 
     this._areas.splice(this.selectedIndex, 1);
-    roomStore.deleteRooms(this.selectedIndex);
+    this._rootStore.roomStore.deleteRooms(this.selectedIndex);
     this.selectedIndex = this._areas.length ? 0 : -1;
   }
 }

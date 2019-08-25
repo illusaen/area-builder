@@ -4,16 +4,16 @@ import { stripIndent } from 'common-tags';
 import fs from 'fs';
 import moment from 'moment';
 import AreaManager from './area';
-import store from '../store/app';
+import store from '../store';
 
 class AppManager {
   static async save_area() {
-    await this._saveArea(store.selectedAreaIndex, false);
+    await this._saveArea(store.areaStore.selectedIndex, false);
     await AreaManager.menu_area();
   }
 
   static async save_all() {
-    for (let index = 0; index < store.areas.length; index++) {
+    for (let index = 0; index < store.areaStore.numberOfAreas; index++) {
       await this._saveArea(index);
     }
   }
@@ -23,7 +23,7 @@ class AppManager {
   }
 
   static _formatArea(areaIndex) {
-    const area = store.areas[areaIndex];
+    const area = store.areaStore.area(areaIndex);
     let data = stripIndent`
       title: "${area.name}"
       behaviors:
@@ -34,7 +34,7 @@ class AppManager {
   }
 
   static _formatRoom(areaIndex) {
-    const data = store.rooms.filter(room => room.areaIndex === areaIndex).map(room => stripIndent`
+    const data = store.roomStore.inArea(areaIndex).map(room => stripIndent`
       - id: ${room.id}
         title: "${room.name}"
         coordinates: [${room.coordinateString}]
@@ -62,7 +62,7 @@ class AppManager {
       fs.mkdirSync(directory);
     };
 
-    const areaDirectory = directory + `/${store.areas[index].id}-${moment().format('YYYY-MM-DD--HH-mm-ss')}`;
+    const areaDirectory = directory + `/${store.areaStore.area(index).id}-${moment().format('YYYY-MM-DD--HH-mm-ss')}`;
     fs.mkdirSync(areaDirectory);
     this._writeFile(areaDirectory, index, true, shouldLog);
     this._writeFile(areaDirectory, index, false, shouldLog);

@@ -3,7 +3,7 @@
 import { prompt } from 'inquirer';
 import { menu_room, create_room, edit_room, select_room, delete_room } from '../prompts/room';
 import AreaManager from './area';
-import store from '../store/app';
+import store from '../store';
 import { normalizeDirection } from '../utils';
 
 class RoomManager {
@@ -15,28 +15,28 @@ class RoomManager {
   static async create_room() {
     const create_room_answers = await prompt(create_room());
     const direction = normalizeDirection(create_room_answers.direction);
-    store.addRoom(create_room_answers.name, create_room_answers.description, create_room_answers.terrain, direction);
+    store.roomStore.add(create_room_answers.name, create_room_answers.description, create_room_answers.terrain, direction);
     await this.menu_room();
   }
 
   static async delete_room() {
     const delete_room_answers = await prompt(delete_room());
     if (delete_room_answers.delete_room) {
-      store.deleteRoom();
+      store.roomStore.delete();
     }
     await this.menu_room();
   }
 
   static async edit_room() {
     const edit_room_answers = await prompt(edit_room());
-    store.configureRoom(edit_room_answers.name, edit_room_answers.description, edit_room_answers.terrain);
+    store.roomStore.edit(edit_room_answers.name, edit_room_answers.description, edit_room_answers.terrain);
     await this.menu_room();
   }
 
   static async select_room() {
     const select_room_answers = await prompt(select_room());
     if (select_room_answers.select_room !== 'back') {
-      store.select(select_room_answers.select_room);
+      store.roomStore.select(select_room_answers.select_room);
     }
     await this.menu_room();
   }

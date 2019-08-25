@@ -1,9 +1,8 @@
 'use strict';
 
 import { action, computed, observable } from 'mobx';
-import { calculateCoordinates, equalCoordinates, normalizeDirection } from '../utils';
+import { calculateCoordinates, equalCoordinates, normalizeDirection, createId } from '../utils';
 import Room from '../models/room';
-import areaStore from './area';
 
 /**
  * Room store module used to store list of all rooms created as well as the currently selected room.
@@ -14,11 +13,27 @@ class RoomStore {
   @observable _rooms = [];
   
   /**
+   * Constructs a new RoomStore with a reference to its parent {@link RootStore}.
+   * @param {RootStore} rootStore Reference to rootStore. Only used to access sibling store {@link AreaStore}'s selectedIndex via computed property {@link this#selectedAreaIndex}.'
+   */
+  constructor(rootStore) {
+    this._rootStore = rootStore;
+  }
+
+  /**
+   * Gets selected area index from {@link AreaStore} via parent {@link RootStore}. Computed property.
+   * @return {number} Index of selected area.
+   */
+  @computed get selectedAreaIndex() {
+    return this._rootStore.areaStore.selectedIndex;
+  }
+
+  /**
    * Gets list of rooms in selected area. Computed using mobx array of rooms and AreaStore's selected index.
    * @return {array<Room>} Array of rooms in selected area.
    */
   @computed get rooms() {
-    return this._rooms.filter(room => room.areaIndex === areaStore.selectedIndex);
+    return this._rooms.filter(room => room.areaIndex === this.selectedAreaIndex);
   }
 
   /**
@@ -29,7 +44,7 @@ class RoomStore {
     return this._rooms.length && 
       this.selectedIndex > -1 && 
       this.selectedIndex < this._rooms.length 
-      && this._rooms[this.selectedIndex].areaIndex === areaStore.selectedIndex;
+      && this._rooms[this.selectedIndex].areaIndex === this.selectedAreaIndex;
   }
 
   /**
@@ -66,6 +81,29 @@ class RoomStore {
   }
 
   /**
+   * Gets index of room with given ID and coordinates in order to get its position against other rooms in the selected area. Uses selected area as well as the convenience functions {@link createId} and {@link equalCoordinates}.
+   * @param {string} id Base ID (without number hash) to check against the rooms.
+   * @param {{x:number, y:number, z:number}} coordinates Coordinates to check against the rooms.
+   * @return {mobx.computed<number>} Mobx computed wrapper around the index of the room with given ID and coordinates. Unwrap using .get().
+   * @throws Will throw an error if there is no selected area.
+   */
+  with(id, coordinates) {
+    return computed(() => this.rooms
+        .filter(room => id === createId(room.name))
+        .findIndex(room => equalCoordinates(coordinates, room.coordinates))
+        );
+  }
+
+  /**
+   * Gets array of rooms belonging to area at index.
+   * @param {number} index Index of areas to get rooms for.
+   * @return {mobx.computed<array>} Mobx computed wrapper around an array of rooms belonging to area at index. Unwrap using .get().
+   */
+  inArea(index) {
+    return computed(() => this._rooms.filter(room => room.areaIndex === index));
+  }
+
+  /**
    * Sets selected room by name. Uses convenience function {} to find area.
    * @param {string} id Id of room to select.
    * @throws Will throw an error if room couldn't be found.
@@ -81,10 +119,10 @@ class RoomStore {
 
   /**
    * Adds a new room to the store in the direction of the currently selected room. Sets selected room to the newly created room.
-   * @param {string} name Name of room that is the raw user inputted string.
-   * @param {string} description Room description that is the raw user inputted string.
+   * @param {string} name Name of room that is the raw user inputed string.
+   * @param {string} description Room description that is the raw user inputed string.
    * @param {string} terrain Terrain that has been validated.
-   * @param {string} direction User inputted direction that the room being added is in relation to the selected room.
+   * @param {string} direction User inputed direction that the room being added is in relation to the selected room.
    * @throws Will throw an error if direction is invalid or there is already a room in that direction.
    */
   @action add(name, description, terrain, direction) {
@@ -97,7 +135,8 @@ class RoomStore {
       throw new TypeError('Room already exists in that direction.');
     }
 
-    this._rooms.push(new Room(name, description, terrain, direction));
+    const coordinates = calculateCoordinates(this.selected.coordinates, dir);
+    this._rooms.push(new Room(this.selectedAreaIndex, name, description, terrain, coordinates));
     this.selectedIndex = this._rooms.length - 1;
   };
 
@@ -128,7 +167,7 @@ class RoomStore {
     }
     
     this._rooms.splice(this.selectedIndex, 1);
-    this.selectedIndex = this._rooms.findIndex(room => room.areaIndex === areaStore.selectedIndex);
+    this.selectedIndex = this._rooms.findIndex(room => room.areaIndex === this.selectedAreaIndex);
   };
 
   /**

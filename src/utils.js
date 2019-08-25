@@ -1,10 +1,10 @@
 'use strict';
 
-import store from './store/app';
+import store from './store';
 
-const filterChoices = (choices) => {
+const filterChoices = (choices, isArea=true) => {
   return choices
-  .filter(choice => !choice.needs || (store[choice.needs]))
+  .filter(choice => !choice.needs || store.dispatcher(isArea).get()[choice.needs]())
   .map(choice => {
     return { name: choice.name, value: choice.value}
   });
@@ -27,14 +27,12 @@ const deltas = {
 }
 const calculateCoordinates = (previous_coordinates, direction) => {
   if (!previous_coordinates) {
-    console.error('ERROR: Could not find coordinates of selected room.');
-    process.exit(1);
+    throw new TypeError('Could not calculate coordinates because origin room coordinates not found.');
   }
   
   const delta = deltas[direction];
   if (!delta) {
-    console.error('ERROR: Could not find delta for direction.');
-    process.exit(1);
+    throw new TypeError('Could not calculate coordinates because delta for direction not found.');
   }
 
   return {

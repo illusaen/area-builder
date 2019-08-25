@@ -1,19 +1,16 @@
 'use strict';
 
 import { computed, observable } from 'mobx';
-import store from '../store/app';
-import { createId, calculateCoordinates, equalCoordinates } from '../utils';
+import store from '../store';
+import { createId } from '../utils';
 
 class Room {
-  constructor(name, description, terrain, direction) {
-    this.areaIndex = store.selectedAreaIndex;
+  constructor(areaIndex, name, description, terrain, coordinates) {
+    this.areaIndex = areaIndex;
     this.name = name;
     this.description = description;
     this.terrain = terrain;
-
-    if (direction) {
-      this.coordinates = calculateCoordinates(store.selectedRoom.coordinates, direction);
-    }
+    this.coordinates = coordinates;
   }
 
   static from(room, areaIndex, coordinates) {
@@ -30,10 +27,9 @@ class Room {
   @observable coordinates = { x: 0, y: 0, z: 0 };
 
   @computed get id() {
-    const tokenized = createId(this.name);
-    const roomsWithName = store.rooms.filter(room => createId(room.name) === tokenized);
-    const index = roomsWithName.findIndex(room => equalCoordinates(this.coordinates, room.coordinates));
-    return tokenized + '-' + (index+1).toString();
+    const tokenizedName = createId(this.name);
+    const index = store.roomStore.with(tokenizedName, this.coordinates).get();
+    return `${tokenizedName}-${index+1}`;
   }
 
   @computed get coordinateString() {
