@@ -48,4 +48,6 @@ const equalCoordinates = (lhs, rhs) => lhs.x === rhs.x && lhs.y === rhs.y && lhs
 
 const equalNames = (lhs, rhs) => createId(lhs) === createId(rhs);
 
-export { createId, calculateCoordinates, equalCoordinates, equalNames, filterChoices, normalizeDirection };
+const contains = (list, answer) => list.filter(el => el === answer).length > 0;
+
+export { createId, calculateCoordinates, contains, equalCoordinates, equalNames, filterChoices, normalizeDirection };
