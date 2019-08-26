@@ -2,7 +2,7 @@
 
 import { computed, observable } from 'mobx';
 import { stripIndent } from 'common-tags';
-import { createId } from '../../utils';
+import { createId } from '../../lib/utils';
 
 class Area {
   constructor(name, respawn, instanced) {

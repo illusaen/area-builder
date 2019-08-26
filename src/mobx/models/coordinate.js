@@ -1,6 +1,6 @@
 'use strict';
 
-import { toEnum } from '../../utils';
+import { toEnum } from '../../lib/utils';
 
 const _deltas = {
   east  : { x:  1, y:  0, z:  0 },

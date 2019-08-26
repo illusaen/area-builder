@@ -2,7 +2,7 @@
 
 import AreaManager from './area';
 import store from '../mobx/store';
-import FSWriter from '../disk';
+import FSWriter from '../lib/disk';
 
 class AppManager {
   static async save_area() {

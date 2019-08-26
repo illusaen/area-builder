@@ -1,9 +1,8 @@
 'use strict';
 
 import { action, computed, observable } from 'mobx';
-import { stripIndent } from 'common-tags';
+import { equalNames } from '../../lib/utils';
 import Area from '../models/area';
-import { equalNames } from '../../utils';
 
 /**
  * Area store module used to store list of all areas created as well as the currently selected area.

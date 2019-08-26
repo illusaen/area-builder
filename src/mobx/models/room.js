@@ -2,9 +2,9 @@
 
 import { computed, observable } from 'mobx';
 import { stripIndent } from 'common-tags';
-import store from '../store';
-import { createId } from '../../utils';
+import { createId } from '../../lib/utils';
 import { Coordinate } from './coordinate';
+import store from '../store';
 
 class Room {
   constructor(areaIndex, name, description, terrain, coordinates) {

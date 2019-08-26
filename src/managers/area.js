@@ -2,7 +2,7 @@
 
 import { prompt } from 'inquirer';
 import { create_area, delete_area, edit_area, menu_area, select_area } from '../prompts/area';
-import { contains } from '../utils';
+import { contains } from '../lib/utils';
 import AppManager from './app';
 import RoomManager from './room';
 import store from '../mobx/store';

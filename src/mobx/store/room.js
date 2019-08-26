@@ -1,9 +1,9 @@
 'use strict';
 
 import { action, computed, observable } from 'mobx';
-import { createId } from '../../utils';
-import Room from '../models/room';
+import { createId } from '../../lib/utils';
 import { Coordinate, Directions } from '../models/coordinate';
+import Room from '../models/room';
 
 /**
  * Room store module used to store list of all rooms created as well as the currently selected room.

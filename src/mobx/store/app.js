@@ -32,6 +32,12 @@ class RootStore {
     return computed(() => isArea ? this.areaStore : this.roomStore);
   }
 
+  /**
+   * Filters choice list depending on state.
+   * @param {boolean} isArea Boolean used to dispatch the filter to either the {@link AreaStore} or the {@link RoomStore}.
+   * @param {array<Object>} choices Prompt list that requires includes a 'needs' variable reprsenting what the choice needs to be shown.
+   * @return {mobx.computed<Object>} Mobx computed wrapper around the filtered list of choices.
+   */
   filter(isArea, choices) {
     return computed(() => {
       const ref = isArea ? this.areaStore : this.roomStore;
