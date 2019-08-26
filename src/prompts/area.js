@@ -1,7 +1,6 @@
 'use strict';
 
-import store from '../models/store';
-import { filterChoices } from '../utils';
+import store from '../mobx/store';
 
 const _menu_prompt_choice_template = [
   {
@@ -37,10 +36,10 @@ const _menu_prompt_choice_template = [
   },
 ];
 const menu_area = () => {
-  const message = store.hasSelectedArea ?
-    `Areas: ${store.numberOfAreas}, Selected: ${store.selectedArea.name}, Rooms in Area: ${store.roomsInArea.length}` :
+  const message = store.areaStore.hasSelectedArea ?
+    `Areas: ${store.areaStore.numberOfAreas}, Selected: ${store.areaStore.selected.name}, Rooms in Area: ${store.roomStore.rooms.length}` :
     'What would you like to do?';
-  const choices = filterChoices(_menu_prompt_choice_template);
+  const choices = store.filter(true, _menu_prompt_choice_template).get();
   return {
     type: 'rawlist',
     name: 'menu_area',
@@ -56,7 +55,7 @@ const _create_area_prompt_choice_template = isCreating => [
     message: 'Name of area:',
     validate: value => {
       if (!value.length) { return 'Please enter a value.'; }
-      if (isCreating && store.doesAreaExist(value)) { return 'Area name already taken.'; }
+      if (isCreating && store.areaStore.exists(value).get()) { return 'Area name already taken.'; }
       return true;
     }
   }, {
@@ -82,7 +81,7 @@ const create_area = () => {
 
 const edit_area = () => {
   return _create_area_prompt_choice_template(false).map(question => {
-    return { ...question, default: store.selectedArea[question.name] };
+    return { ...question, default: store.areaStore.selected[question.name] };
   });
 };
 
@@ -91,7 +90,7 @@ const select_area = () => {
     type: 'rawlist',
     name: 'select_area',
     message: 'Which area would you like to select?',
-    choices: [...store.areaNames, 'Back'],
+    choices: [...store.areaStore.names, 'Back'],
   };
 };
 
@@ -99,7 +98,7 @@ const delete_area = () => {
   return {
     type: 'confirm',
     name: 'delete_area',
-    message: `Are you sure you want to delete area '${store.selectedArea.name}'?`
+    message: `Are you sure you want to delete area '${store.areaStore.selected.name}'?`
   }
 };
 

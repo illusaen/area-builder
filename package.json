@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel -d build/ src",
-    "start": "npm run build && node build/index.js"
+    "start": "npm run build && node --inspect build/index.js"
   },
   "babel": {
     "presets": [
@@ -48,6 +48,7 @@
     "@babel/core": "latest",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.4.4",
-    "@babel/preset-env": "^7.5.5"
+    "@babel/preset-env": "^7.5.5",
+    "jsdoc": "^3.6.3"
   }
 }

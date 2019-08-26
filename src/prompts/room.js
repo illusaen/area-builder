@@ -1,7 +1,7 @@
 'use strict';
 
-import store from '../models/store';
-import { filterChoices, normalizeDirection } from '../utils';
+import store from '../mobx/store';
+import { Directions } from '../mobx/models/coordinate';
 
 const _menu_room_prompt_choice_template = [
   {
@@ -10,7 +10,7 @@ const _menu_room_prompt_choice_template = [
   }, {
     name: 'Select different room',
     value: 'select_room',
-    needs: 'roomsInArea'
+    needs: 'rooms'
   }, {
     name: 'Edit selected room',
     value: 'edit_room',
@@ -25,10 +25,10 @@ const _menu_room_prompt_choice_template = [
   }
 ];
 const menu_room = () => {
-  const message = store.hasSelectedRoom ?
-    `Number: ${store.roomsInArea.length}, Selected: ${store.selectedRoom.name} at {${store.selectedRoom.coordinateString}}` :
+  const message = store.roomStore.hasSelectedRoom ?
+    `Number: ${store.roomStore.rooms.length}, Selected: ${store.roomStore.selected.name} at {${store.roomStore.selected.coordinates.string()}}` :
     'What room function would you like to perform?';
-  const choices = filterChoices(_menu_room_prompt_choice_template);
+  const choices = store.filter(false, _menu_room_prompt_choice_template).get();
   return {
     type: 'rawlist',
     name: 'menu_room',
@@ -38,20 +38,19 @@ const menu_room = () => {
 }
 
 const _terrains = ['city', 'field', 'hills', 'desert', 'swamp', 'ice', 'light_forest', 'deep_forest', 'jungle', 'mountain', 'water', 'deep_water', 'under_water', 'under_ground', 'air', 'lava', '_default'];
+
 const _validateRoomDirection = value => {
-  const match = normalizeDirection(value);
+  const match = Directions.normalize(value);
   if (!match) {
     return 'Please enter a valid direction.';
   }
 
-  const roomExists = store.doesRoomExist(store.selectedRoom, match);
-  if (roomExists) {
+  if (store.roomStore.exists(match).get()) {
     return `There is already a room in that direction!`;
   }
-
+  
   return true;
 }
-
 const _validateEmpty = value => {
   if (!value.length) { return 'Please enter a value.'; }
   return true;
@@ -67,7 +66,7 @@ const _create_room_prompt_choice_template = isCreating => {
       type: 'input',
       name: 'direction',
       message: 'Direction from selected room (n, s, e, w, u, d)',
-      when: _ => store.hasSelectedRoom && isCreating,
+      when: _ => store.roomStore.hasSelectedRoom && isCreating,
       validate: value => _validateRoomDirection(value)
     }, {
       type: 'input',
@@ -75,7 +74,7 @@ const _create_room_prompt_choice_template = isCreating => {
       message: 'Room name:',
       validate: value => _validateEmpty(value)
     }, {
-      type: 'input',
+      type: 'editor',
       name: 'description',
       message: 'Room description:'
     }, {
@@ -91,7 +90,7 @@ const _create_room_prompt_choice_template = isCreating => {
 const create_room = () => _create_room_prompt_choice_template(true);
 
 const edit_room = () => _create_room_prompt_choice_template(false).map(question => {
-  return { ...question, default: store.selectedRoom[question.name] };
+  return { ...question, default: store.roomStore.selected[question.name] };
 });
 
 const select_room = () => {
@@ -99,7 +98,7 @@ const select_room = () => {
     type: 'rawlist',
     name: 'select_room',
     message: 'Which room would you like to select?',
-    choices: [...store.idOfRoomsInArea, 'Back'],
+    choices: [...store.roomStore.ids, 'Back'],
   }
 }
 
@@ -107,7 +106,7 @@ const delete_room = () => {
   return {
     type: 'confirm',
     name: 'delete_room',
-    message: `Are you sure you want to delete room '${store.selectedRoom.id}' in area ${store.selectedArea.name}'?`
+    message: `Are you sure you want to delete room '${store.roomStore.selected.id}' in area ${store.areaStore.selected.name}'?`
   };
 }
 

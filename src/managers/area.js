@@ -2,10 +2,10 @@
 
 import { prompt } from 'inquirer';
 import { create_area, delete_area, edit_area, menu_area, select_area } from '../prompts/area';
-import { contains } from '../utils';
+import { contains } from '../lib/utils';
 import AppManager from './app';
 import RoomManager from './room';
-import store from '../models/store';
+import store from '../mobx/store';
 
 class AreaManager {
   static appManagerFunctions = ['save_area', 'save_all', 'quit'];
@@ -21,30 +21,29 @@ class AreaManager {
 
   static async create_area() {
     const create_area_answers = await prompt(create_area());
-    store.addArea(create_area_answers.name, create_area_answers.respawn, create_area_answers.instanced);
+    store.areaStore.add(create_area_answers.name, create_area_answers.respawn, create_area_answers.instanced);
     await this.menu_area();
   }
 
   static async delete_area() {
     const delete_area_answers = await prompt(delete_area());
     if (delete_area_answers.delete_area) {
-      store.deleteArea();
+      store.areaStore.delete();
     }
     await this.menu_area();
   }
 
   static async edit_area() {
     const edit_area_answers = await prompt(edit_area());
-    store.configureArea(edit_area_answers.name, edit_area_answers.respawn, edit_area_answers.instanced);
+    store.areaStore.edit(edit_area_answers.name, edit_area_answers.respawn, edit_area_answers.instanced);
     await this.menu_area();
   }
 
   static async select_area() {
     const questions = select_area();
     const select_area_answers = await prompt(questions);
-    if (select_area_answers.select_area !== 'back') {
-      const index = store.areas.findIndex(area => area.name === select_area_answers.select_area);
-      store.setSelectedArea(index);
+    if (select_area_answers.select_area !== 'Back') {
+      store.areaStore.select(select_area_answers.select_area);
     }
     await this.menu_area();
   }
