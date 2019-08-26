@@ -1,8 +1,10 @@
 'use strict';
 
 import { computed, observable } from 'mobx';
+import { stripIndent } from 'common-tags';
 import store from '../store';
-import { createId } from '../utils';
+import { createId } from '../../utils';
+import { Coordinate } from './coordinate';
 
 class Room {
   constructor(areaIndex, name, description, terrain, coordinates) {
@@ -14,9 +16,7 @@ class Room {
   }
 
   static from(room, areaIndex, coordinates) {
-    const newRoom = new Room(room.name, room.description, room.terrain);
-    newRoom.coordinates = { x: coordinates.x, y: coordinates.y, z: coordinates.z };
-    newRoom.areaIndex = areaIndex;
+    const newRoom = new Room(areaIndex, room.name, room.description, room.terrain, coordinates);
     return newRoom;
   }
 
@@ -24,7 +24,7 @@ class Room {
   @observable areaIndex = -1;
   @observable description = '';
   @observable terrain = '';
-  @observable coordinates = { x: 0, y: 0, z: 0 };
+  @observable coordinates = new Coordinate(0, 0, 0);
 
   @computed get id() {
     const tokenizedName = createId(this.name);
@@ -32,8 +32,18 @@ class Room {
     return `${tokenizedName}-${index+1}`;
   }
 
-  @computed get coordinateString() {
-    return `${this.coordinates.x}, ${this.coordinates.y}, ${this.coordinates.z}`;
+  /**
+   * Returns representation of room in string format. String is formatted for RanvierMUD.
+   * @return {string} String representation of room instance.
+   */
+  @computed get string() {
+    return stripIndent`
+- id: ${this.id}
+  title: "${this.name}"
+  coordinates: [${this.coordinates.string()}]
+  description: "${this.description}"
+  metadata:
+    terrain: "${this.terrain}"`;
   }
 }
 

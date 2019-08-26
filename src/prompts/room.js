@@ -1,7 +1,7 @@
 'use strict';
 
-import store from '../store';
-import { filterChoices, normalizeDirection } from '../utils';
+import store from '../mobx/store';
+import { Directions } from '../mobx/models/coordinate';
 
 const _menu_room_prompt_choice_template = [
   {
@@ -10,7 +10,7 @@ const _menu_room_prompt_choice_template = [
   }, {
     name: 'Select different room',
     value: 'select_room',
-    needs: 'roomsInArea'
+    needs: 'rooms'
   }, {
     name: 'Edit selected room',
     value: 'edit_room',
@@ -26,9 +26,9 @@ const _menu_room_prompt_choice_template = [
 ];
 const menu_room = () => {
   const message = store.roomStore.hasSelectedRoom ?
-    `Number: ${store.roomStore.rooms.length}, Selected: ${store.roomStore.selected.name} at {${store.roomStore.selected.coordinateString}}` :
+    `Number: ${store.roomStore.rooms.length}, Selected: ${store.roomStore.selected.name} at {${store.roomStore.selected.coordinates.string()}}` :
     'What room function would you like to perform?';
-  const choices = filterChoices(_menu_room_prompt_choice_template);
+  const choices = store.filter(false, _menu_room_prompt_choice_template).get();
   return {
     type: 'rawlist',
     name: 'menu_room',
@@ -38,8 +38,9 @@ const menu_room = () => {
 }
 
 const _terrains = ['city', 'field', 'hills', 'desert', 'swamp', 'ice', 'light_forest', 'deep_forest', 'jungle', 'mountain', 'water', 'deep_water', 'under_water', 'under_ground', 'air', 'lava', '_default'];
+
 const _validateRoomDirection = value => {
-  const match = normalizeDirection(value);
+  const match = Directions.normalize(value);
   if (!match) {
     return 'Please enter a valid direction.';
   }
@@ -47,10 +48,9 @@ const _validateRoomDirection = value => {
   if (store.roomStore.exists(match).get()) {
     return `There is already a room in that direction!`;
   }
-
+  
   return true;
 }
-
 const _validateEmpty = value => {
   if (!value.length) { return 'Please enter a value.'; }
   return true;
@@ -74,7 +74,7 @@ const _create_room_prompt_choice_template = isCreating => {
       message: 'Room name:',
       validate: value => _validateEmpty(value)
     }, {
-      type: 'input',
+      type: 'editor',
       name: 'description',
       message: 'Room description:'
     }, {

@@ -1,7 +1,6 @@
 'use strict';
 
-import store from '../store';
-import { filterChoices } from '../utils';
+import store from '../mobx/store';
 
 const _menu_prompt_choice_template = [
   {
@@ -40,7 +39,7 @@ const menu_area = () => {
   const message = store.areaStore.hasSelectedArea ?
     `Areas: ${store.areaStore.numberOfAreas}, Selected: ${store.areaStore.selected.name}, Rooms in Area: ${store.roomStore.rooms.length}` :
     'What would you like to do?';
-  const choices = filterChoices(_menu_prompt_choice_template);
+  const choices = store.filter(true, _menu_prompt_choice_template).get();
   return {
     type: 'rawlist',
     name: 'menu_area',

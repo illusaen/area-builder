@@ -1,6 +1,6 @@
 'use strict';
 
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import AreaStore from './area';
 import RoomStore from './room';
 
@@ -30,6 +30,17 @@ class RootStore {
    */
   dispatcher(isArea) {
     return computed(() => isArea ? this.areaStore : this.roomStore);
+  }
+
+  filter(isArea, choices) {
+    return computed(() => {
+      const ref = isArea ? this.areaStore : this.roomStore;
+      return choices
+        .filter(choice => !choice.needs || ref[choice.needs])
+        .map(choice => {
+          return { name: choice.name, value: choice.value}
+        });
+    });
   }
 }
 
