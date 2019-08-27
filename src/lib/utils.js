@@ -50,8 +50,12 @@ class toEnum {
     return Object.freeze(this);
   }
 
+  values() {
+    return this._keys.map(el => this[el]);
+  }
+  
   has(key) {
-    return this.hasOwnProperty(key);
+    return this.values().includes(key) || this._keys.includes(key);
   }
 }
 
