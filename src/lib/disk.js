@@ -1,6 +1,7 @@
 'use strict';
 
 import fs from 'fs';
+import yaml from 'js-yaml';
 import moment from 'moment';
 
 const Name = {
@@ -39,4 +40,25 @@ class FSWriter {
   }
 }
 
-export default FSWriter;
+class FSReader {
+  static listAreas() {
+    try {
+      return fs.readdirSync(Name.FOLDER, { withFileTypes: true }).filter(el => el.isDirectory()).map(el => el.name);
+    } catch (err) {
+      return [];
+    };
+  }
+
+  static loadArea(path) {
+    try {
+      const directory = `${Name.FOLDER}/${path}`;
+      const area = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.AREA}`, 'utf-8'));
+      const rooms = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.ROOM}`, 'utf-8'));
+      return { area, rooms };
+    } catch (err) {
+      throw err;
+    }
+  }
+}
+
+export { FSReader, FSWriter };

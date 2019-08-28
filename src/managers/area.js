@@ -8,7 +8,7 @@ import RoomManager from './room';
 import store from '../mobx/store';
 
 class AreaManager {
-  static appManagerFunctions = ['save_area', 'save_all', 'quit'];
+  static appManagerFunctions = ['save_area', 'save_all', 'quit', 'load_area'];
   static areaManagerFunctions = ['create_area', 'delete_area', 'edit_area', 'select_area'];
   static roomManagerFunctions = ['menu_room', 'create_room', 'delete_room', 'edit_room', 'select_room'];
 
