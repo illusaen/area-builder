@@ -61,7 +61,7 @@
          ],
          "questions": [
             {
-               "key": "name",
+               "key": "area_name",
                "template": "Area name",
                "type": "input",
                "validate": "validateExists"
@@ -165,41 +165,46 @@
          ],
          "questions": [
             {
-               "key": "name",
+               "key": "direction",
+               "template": "Direction from selected room (n, s, e, w, u, d)",
+               "type": "input",
+               "validate": "validateDirection"
+            },
+            {
+               "key": "room_name",
                "template": "Room name",
                "type": "input",
                "validate": "validateExists"
             },
             {
-               "key": "respawn",
-               "template": "Number of minutes to respawn",
-               "type": "input",
-               "default": 20,
-               "validate": "validateNumber"
+               "key": "description",
+               "template": "Room description",
+               "type": "editor"
             },
             {
-               "key": "instanced",
-               "template": "Is this area instanced?",
-               "type": "checkbox",
-               "default": false
+               "key": "terrain",
+               "template": "Invalid terrain.",
+               "type": "input",
+               "default": "_default",
+               "validate": "validateTerrain"
             }
          ]
       },
-      "select_area": {
+      "select_room": {
          "type": "choice",
          "header": [
             {
-               "template": "Which area would you like to select?"
+               "template": "Which room would you like to select?"
             }
          ],
          "questions": [
             {
-               "key": "${area.name}",
-               "template": "${area.name}"
+               "key": "${room.id}",
+               "template": "${room.id}"
             },
             {
                "key": "BACK",
-               "template": "Back to area menu"
+               "template": "Back to room menu"
             }
          ]
       },
@@ -210,7 +215,7 @@
                "template": "Delete"
             }
          ],
-         "message": "Are you sure you want to delete area '${store.areaStore.selected.name}'?"
+         "message": "Are you sure you want to delete room '${store.roomStore.selected.id}' in area ${store.areaStore.selected.name}'?"
       }
    }
 }

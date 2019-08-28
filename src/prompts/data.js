@@ -4,7 +4,8 @@ const QuestionTypes = new toEnum({
    CHOICE: 'choice',
    FORM: 'form',
    INPUT: 'input',
-   CHECKBOX: 'checkbox'
+   CHECKBOX: 'checkbox',
+   EDITOR: 'editor'
 }, undefined);
 
 const Terrains = new toEnum({
