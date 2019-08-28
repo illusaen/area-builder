@@ -59,7 +59,7 @@ class AreaManager {
       name: AreaPrompts.MENU,
       pageSize,
       message,
-      choices: store.filter(true, menuChoices).get()
+      choices: store.filter(true, menuChoices)
     });
     const choice = answers[AreaPrompts.MENU];
 

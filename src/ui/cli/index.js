@@ -1,6 +1,7 @@
 import { toEnum } from '../../lib/utils';
 
 const pageSize = 24;
+
 const AreaPrompts = new toEnum({
   CREATE: 'create_area',
   DELETE: 'delete_area',
@@ -14,6 +15,7 @@ const AreaPrompts = new toEnum({
   QUIT: 'quit',
   BACK: 'Back',
 }, undefined);
+
 const RoomPrompts = new toEnum({
   CREATE: 'create_room',
   DELETE: 'delete_room',

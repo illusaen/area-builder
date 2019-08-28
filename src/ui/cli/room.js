@@ -4,8 +4,8 @@ import { prompt } from 'inquirer';
 import AreaManager from './area';
 import store from '../../mobx/store';
 import { pageSize, RoomPrompts } from './index';
-import {Terrains, validator} from '../data';
-import {Directions} from '../../mobx/models/coordinate';
+import { Terrains, validator } from '../data';
+import { Directions } from '../../mobx/models/coordinate';
 
 const menuChoices = [
   {
@@ -39,7 +39,7 @@ class RoomManager {
       pageSize,
       name: RoomPrompts.MENU,
       message,
-      choices: store.filter(false, menuChoices).get()
+      choices: store.filter(false, menuChoices)
     });
     const choice = answers[RoomPrompts.MENU];
     return choice === RoomPrompts.BACK ? await AreaManager.menu_area() : await this[choice]();
@@ -92,7 +92,7 @@ class RoomManager {
         type: 'input',
         name: 'direction',
         message: 'Direction from selected room (n, s, e, w, u, d)',
-        when: _ => store.roomStore.hasSelectedRoom && isCreating,
+        when: () => store.roomStore.hasSelectedRoom && isCreating,
         validate: value => validator(() => {
           const match = Directions.normalize(value);
           if (!match) {

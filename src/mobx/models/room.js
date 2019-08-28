@@ -16,8 +16,7 @@ class Room {
   }
 
   static from(room, areaIndex, coordinates) {
-    const newRoom = new Room(areaIndex, room.name, room.description, room.terrain, coordinates);
-    return newRoom;
+    return new Room(areaIndex, room.name, room.description, room.terrain, coordinates);
   }
   
   static parsed(areaIndex, data) {

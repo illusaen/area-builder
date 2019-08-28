@@ -24,30 +24,17 @@ class RootStore {
   }
 
   /**
-   * Dispatches call to correct child store.
-   * @param {boolean} isArea Which child to dispatch to.
-   * @return {mobx.computed<AreaStore|RoomStore>} Mobx computed wrapper around a reference to {@link AreaStore} if isArea else {@link RoomStore}. Unwrap using .get().
-   */
-  dispatcher(isArea) {
-    return computed(() => isArea ? this.areaStore : this.roomStore);
-  }
-
-  /**
    * Filters choice list depending on state.
    * @param {boolean} isArea Boolean used to dispatch the filter to either the {@link AreaStore} or the {@link RoomStore}.
    * @param {array<Object>} choices Prompt list that requires includes a 'needs' variable reprsenting what the choice needs to be shown.
-   * @return {mobx.computed<Object>} Mobx computed wrapper around the filtered list of choices.
+   * @return {array<Object>} Filtered list of choices.
    */
   filter(isArea, choices) {
-    return computed(() => {
-      const ref = isArea ? this.areaStore : this.roomStore;
-      return choices
-        .filter(choice => !choice.needs || ref[choice.needs])
-        .map(choice => {
-          return { name: choice.name, value: choice.value}
-        });
-    });
-  }
+    const ref = isArea ? this.areaStore : this.roomStore;
+    return choices
+      .filter(choice => !choice.needs || ref[choice.needs])
+      .map(choice => ({ name: choice.name, value: choice.value}));
+  };
 }
 
 export default RootStore;
