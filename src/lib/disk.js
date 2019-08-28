@@ -9,7 +9,7 @@ const Name = {
   AREA: 'manifest.yml',
   FOLDER: './exports',
   TIMESTAMP: 'YYYY-MM-DD--HH-mm-ss',
-}
+};
 
 class FSWriter {
   static saveArea(area, rooms, log) {
@@ -23,7 +23,7 @@ class FSWriter {
   static _createDirectory(area) {
     if (!fs.existsSync(Name.FOLDER)) {
       fs.mkdirSync(Name.FOLDER);
-    };
+    }
 
     const areaDirectory = `${Name.FOLDER}/${area.id}-${moment().format(Name.TIMESTAMP)}`;
     fs.mkdirSync(areaDirectory);
@@ -46,14 +46,14 @@ class FSReader {
       return fs.readdirSync(Name.FOLDER, { withFileTypes: true }).filter(el => el.isDirectory()).map(el => el.name);
     } catch (err) {
       return [];
-    };
+    }
   }
 
   static loadArea(path) {
     try {
       const directory = `${Name.FOLDER}/${path}`;
       const area = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.AREA}`, 'utf-8'));
-      const rooms = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.ROOM}`, 'utf-8'));
+      const rooms = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.ROOM}`, 'utf-8')) || [];
       return { area, rooms };
     } catch (err) {
       throw err;

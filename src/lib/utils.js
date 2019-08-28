@@ -7,7 +7,7 @@
  */
 function createId(name) {
   return name.toLowerCase().replace(/(the |an |a )/g, '').trim().replace(/\s+/g, '-');
-};
+}
 
 /**
  * Checks if two names collide by comparing the two hashes.
@@ -46,7 +46,7 @@ class toEnum {
     this._keys = Object.keys(object);
     this.normalize = function(input) {
       return object[fn(input, this)];
-    }
+    };
     return Object.freeze(this);
   }
 
