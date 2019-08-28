@@ -1,6 +1,6 @@
 'use strict';
 
-import { computed, observable } from 'mobx';
+import { observable } from 'mobx';
 import AreaStore from './area';
 import RoomStore from './room';
 

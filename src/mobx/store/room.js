@@ -188,16 +188,15 @@ class RoomStore {
    * @param {number} areaIndex Index of area being deleted.
    */
   @action deleteRooms(areaIndex) {
-    const rooms = this._rooms
-      .filter(room => room.areaIndex !== areaIndex)
-      .map(room => {
-        // Area at areaIndex is being removed, so decrement all rooms' indices who belong to areas with indices above the one being deleted
-        if (room.areaIndex > areaIndex) {
-          return Room.from(room, room.areaIndex - 1, Coordinate.copy(room.coordinates));
-        }
-        return room;
-      });
-    this._rooms = rooms;
+    this._rooms = this._rooms
+        .filter(room => room.areaIndex !== areaIndex)
+        .map(room => {
+          // Area at areaIndex is being removed, so decrement all rooms' indices who belong to areas with indices above the one being deleted
+          if (room.areaIndex > areaIndex) {
+            return Room.from(room, room.areaIndex - 1, Coordinate.copy(room.coordinates));
+          }
+          return room;
+        });
     this.selectedIndex = this._rooms.length ? 0 : -1;
   }
 }

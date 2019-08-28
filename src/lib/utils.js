@@ -20,16 +20,6 @@ function equalNames(lhs, rhs) {
 }
 
 /**
- * Checks if an element is in the array. The element type must also match the array's element type exactly.
- * @param {array} list Array of elements to check.
- * @param {*} element Element to check array against.
- * @return {boolean} True if element is represented in the array, false if not.
- */
-function contains(list, element) {
-  return list.filter(el => el === element).length > 0;
-}
-
-/**
  * Composer class used to create enumerations. Will have convenience functions:
  * Takes in an {@link Object} object with key/value pairs representing enumeration element and representation of element.
  * Will have convenicne functions:
@@ -59,4 +49,4 @@ class toEnum {
   }
 }
 
-export { createId, contains, equalNames, toEnum };
+export { createId, equalNames, toEnum };
