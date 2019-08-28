@@ -102,6 +102,15 @@ class AreaStore {
   }
 
   /**
+   * Loads an area to the store. Sets selected area to the newly added area.
+   * @param {string} data Area to add in data form.
+   */
+  @action load(data) {
+    this._areas.push(Area.parsed(data));
+    this.selectedIndex = this._areas.length - 1;
+  };
+
+  /**
    * Edits the currently selected area. Uses current index.
    * @param {string} name Name of the area to change to. Defaults to previous name. Raw user input string.
    * @param {number} respawn Respawn rate of the area to change to. Defaults to previous respawn.

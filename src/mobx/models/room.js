@@ -19,6 +19,12 @@ class Room {
     const newRoom = new Room(areaIndex, room.name, room.description, room.terrain, coordinates);
     return newRoom;
   }
+  
+  static parsed(areaIndex, data) {
+    const terrain = data.metadata.terrain;
+    const [ x, y, z ] = data.coordinates;
+    return new Room(areaIndex, data.title, data.description, terrain, new Coordinate(x, y, z));
+  }
 
   @observable name = '';
   @observable areaIndex = -1;

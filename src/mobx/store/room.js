@@ -145,6 +145,15 @@ class RoomStore {
   };
 
   /**
+   * Loads a room to the store. Sets selected room to the newly added room.
+   * @param {string} data Room to add in data form.
+   */
+  @action load(data) {
+    this._rooms.push(Room.parsed(this.selectedAreaIndex, data));
+    this.selectedIndex = this._rooms.length - 1;
+  };
+
+  /**
    * Edits the currently selected room. Uses current index.
    * @param {string} name Name of the room to change to. Defaults to previous name. Raw user input string.
    * @param {string} description Description of the room to change to. Defaults to previous description. Raw user input string.

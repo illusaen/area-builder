@@ -11,6 +11,12 @@ class Area {
     this.instanced = instanced;
   }
 
+  static parsed(data) {
+    const respawn = data.behaviors['progressive-respawn'].interval || 0;
+    const instanced = data.instanced !== undefined && data.instanced;
+    return new Area(data.title, respawn, instanced);
+  }
+
   @observable name = '';
   @observable respawn = 0;
   @observable instanced = false;
