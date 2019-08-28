@@ -9,7 +9,7 @@ configure({
    computedRequiresReaction: true,
 });
 
-const rootStore = new RootStore();
+// const rootStore = new RootStore();
 AreaManager.menu_area();
 // const raw = require('./prompts/data.json');
 // function ui(layer, text) {
@@ -18,3 +18,4 @@ AreaManager.menu_area();
 // }
 
 // ui('react', rootStore);
+// export { rootStore };

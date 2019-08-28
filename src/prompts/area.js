@@ -8,6 +8,9 @@ const _menu_prompt_choice_template = [
       name: 'Create new area',
       value: 'create_area'
    }, {
+      name: 'Load an area folder',
+      value: 'load_area'
+   }, {
       name: 'Select an area',
       value: 'select_area',
       needs: 'numberOfAreas'
@@ -49,7 +52,7 @@ const menu_area = () => {
    };
 }
 
-const _create_area_prompt_choice_template = isCreating => [
+const _create_area_prompt_choice_template = () => [
    {
       type: 'input',
       name: 'name',
@@ -74,11 +77,11 @@ const _create_area_prompt_choice_template = isCreating => [
    },
 ];
 const create_area = () => {
-   return _create_area_prompt_choice_template(true);
+   return _create_area_prompt_choice_template();
 };
 
 const edit_area = () => {
-   return _create_area_prompt_choice_template(false).map(question => {
+   return _create_area_prompt_choice_template().map(question => {
       return { ...question, default: store.areaStore.selected[question.name] };
    });
 };
