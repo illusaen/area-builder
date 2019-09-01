@@ -16,7 +16,7 @@ class FSWriter {
     const directory = this._createDirectory(area);
     this._writeFile(`${directory}/${Name.AREA}`, area.string, log);
 
-    const roomData = rooms.map(rm => rm.string).join('\n\n') + '\n';
+    const roomData = '---\n' + rooms.map(rm => rm.string).join('\n\n') + '\n';
     this._writeFile(`${directory}/${Name.ROOM}`, roomData, log);
   }
 
@@ -54,9 +54,10 @@ class FSReader {
       const directory = `${Name.FOLDER}/${path}`;
       const area = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.AREA}`, 'utf-8'));
       const rooms = yaml.safeLoad(fs.readFileSync(`${directory}/${Name.ROOM}`, 'utf-8')) || [];
-      return { area, rooms };
+      const parsedRooms = Array.isArray(rooms) ? rooms : [rooms];
+      return { area, rooms: parsedRooms };
     } catch (err) {
-      throw err;
+      return {};
     }
   }
 }

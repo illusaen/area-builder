@@ -151,6 +151,7 @@ class AreaManager {
 
   static async _load(choice) {
     const { area, rooms } = await FSReader.loadArea(choice);
+    if (!area || !rooms) { return; }
     store.areaStore.load(area);
     rooms.forEach(room => store.roomStore.load(room));
   }

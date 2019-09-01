@@ -31,7 +31,8 @@ class Area {
    */
   @computed get string() {
     return stripIndent`
-      title: "${this.name}"
+      ---
+      title: ${this.name}
       behaviors:
         progressive-respawn:
           interval: ${this.respawn}
